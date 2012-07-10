@@ -1,26 +1,30 @@
 #include "snapshot_handler.h"
-
+#include "rnc.h"
+//constructor
 snapshot_handler::snapshot_handler() {}
-
+//destructor
 snapshot_handler::~snapshot_handler() {}
 
 //handlers for the SAX DocumentHandler interface
 void snapshot_handler::startElement(const XMLCh * const name, xc::AttributeList &  attributes) {
-	
-	if ( xc::XMLString::equals(name,xc::XMLString::transcode("RNC")) ) {
+	char *tag = xc::XMLString::transcode(name);
+	if ( xc::XMLString::equals(tag,"RNC") ) {
 		char *id = xc::XMLString::transcode(attributes.getValue("id"));
 		std::cout << "RNC is " << id << std::endl;
 		xc::XMLString::release(&id);
 	}
+	xc::XMLString::release(&tag);
 }
 
 void snapshot_handler::endElement(const XMLCh * const name) {
-	char * element = xc::XMLString::transcode(name);
-	//std::cout << "End element is " << element << std::endl;
-	xc::XMLString::release(&element);
+	char *tag = xc::XMLString::transcode(name);
+	if ( xc::XMLString::equals(tag,"RNC") ) {
+		std::cout << "RNC End element found " << std::endl;
+	}
+	xc::XMLString::release(&tag);
 }
 
-void snapshot_handler::characters(  const   XMLCh* const characters, const XMLSize_t length) {
+void snapshot_handler::characters(const XMLCh* const characters, const XMLSize_t length) {
 }
 
 //handlers for the SAX ErrorHandler interface
