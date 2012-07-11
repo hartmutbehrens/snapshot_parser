@@ -1,5 +1,5 @@
 #include "snapshot_handler.h"
-#include "rnc.h"
+#include "xml_node.h"
 //constructor
 snapshot_handler::snapshot_handler() {}
 //destructor
@@ -7,20 +7,20 @@ snapshot_handler::~snapshot_handler() {}
 
 //handlers for the SAX DocumentHandler interface
 void snapshot_handler::startElement(const XMLCh * const name, xc::AttributeList &  attributes) {
-	char *tag = xc::XMLString::transcode(name);
-	if ( xc::XMLString::equals(tag,"RNC") ) {
-		char *id = xc::XMLString::transcode(attributes.getValue("id"));
-		std::cout << "RNC is " << id << std::endl;
-		xc::XMLString::release(&id);
+	
+	xml_node *xn = new xml_node(name,attributes);
+	if ( (*xn).is_tag("RNC") ) {
+		std::cout << *xn;
 	}
-	xc::XMLString::release(&tag);
+	delete xn;
+	
 }
 
 void snapshot_handler::endElement(const XMLCh * const name) {
 	char *tag = xc::XMLString::transcode(name);
-	if ( xc::XMLString::equals(tag,"RNC") ) {
-		std::cout << "RNC End element found " << std::endl;
-	}
+	//if ( xc::XMLString::equals(tag,"RNC") ) {
+	//	std::cout << "RNC End element found " << std::endl;
+	//}
 	xc::XMLString::release(&tag);
 }
 
