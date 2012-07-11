@@ -21,6 +21,9 @@ public:
 	//member functions
 	bool is_tag(const char *);
 	bool is_id(const char *);
+	bool has_characters();
+	char * get_characters();
+	char * get_tag();
 	//overloaded operators
 	friend std::ostream & operator<<(std::ostream &, const xml_node &);
 	//destructor

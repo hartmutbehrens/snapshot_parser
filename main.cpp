@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 	parser->setErrorHandler(err_handler);
 
 	try {
-		std::cout << "Trying " << std::endl;
+		std::cout << "Parsing " << xml_file << std::endl;
 		parser->parse(xml_file);
 	}
 	catch (const xc::XMLException & to_catch) {

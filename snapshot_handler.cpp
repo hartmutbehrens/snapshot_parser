@@ -1,5 +1,8 @@
 #include "snapshot_handler.h"
-#include "xml_node.h"
+#include <algorithm>
+#include <iterator>
+
+
 //constructor
 snapshot_handler::snapshot_handler() {}
 //destructor
@@ -7,24 +10,36 @@ snapshot_handler::~snapshot_handler() {}
 
 //handlers for the SAX DocumentHandler interface
 void snapshot_handler::startElement(const XMLCh * const name, xc::AttributeList &  attributes) {
-	
 	xml_node *xn = new xml_node(name,attributes);
-	if ( (*xn).is_tag("RNC") ) {
-		std::cout << *xn;
-	}
-	delete xn;
+	nodes.push_back(xn);
 	
 }
 
 void snapshot_handler::endElement(const XMLCh * const name) {
-	char *tag = xc::XMLString::transcode(name);
-	//if ( xc::XMLString::equals(tag,"RNC") ) {
-	//	std::cout << "RNC End element found " << std::endl;
-	//}
-	xc::XMLString::release(&tag);
+	xml_node *xn = nodes.back();		//get pointer to last xml_node
+	nodes.pop_back();					//pop pointer off
+	delete xn;							//free memory
 }
 
 void snapshot_handler::characters(const XMLCh* const characters, const XMLSize_t length) {
+}
+
+std::string snapshot_handler::get_xpath() {
+	std::string xpath;
+	std::list<xml_node *>::iterator it;
+	for(it = nodes.begin(); it != nodes.end(); ++it) {
+		xpath = xpath + "/" + (**it).get_tag();
+	}
+	return xpath;
+}
+
+bool snapshot_handler::is_xpath(const char *to_compare) {
+	bool isval = false;
+	std::string xpath = get_xpath();
+	if (xpath.compare(to_compare) == 0) {
+		isval = true;
+	}
+	return isval;
 }
 
 //handlers for the SAX ErrorHandler interface
