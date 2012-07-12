@@ -20,7 +20,7 @@ void snapshot_handler::startElement(const XMLCh * const name, xc::AttributeList 
 
 void snapshot_handler::endElement(const XMLCh * const name) {
 	std::string xpath = nodes.current_xpath();
-	
+
 	if (wanted.find(xpath) != wanted.end() ) {
 		std::cout << nodes << std::endl;
 	}
@@ -31,16 +31,6 @@ void snapshot_handler::characters(const XMLCh* const ch, const XMLSize_t length)
 	if (length > 1) {
 		nodes.back()->add_characters(ch);	//update characters of last node
 	}
-}
-
-
-template <typename T>
-void snapshot_handler::message(const char * which, const T & exception) {
-	char * id = xc::XMLString::transcode(exception.getSystemId());
-	char * msg = xc::XMLString::transcode(exception.getMessage());
-	std::cerr << std::endl << which << " at file " << id << ", line " << exception.getLineNumber() << ", char " << exception.getColumnNumber() << "\n  Message: " << msg << std::endl;
-	xc::XMLString::release(&id);
-	xc::XMLString::release(&msg);
 }
 
 //handlers for the SAX ErrorHandler interface
@@ -54,4 +44,13 @@ void snapshot_handler::fatalError(const xc::SAXParseException& e) {
 
 void snapshot_handler::warning(const xc::SAXParseException& e) {
 	snapshot_handler::message("Warning", e);
+}
+
+template <typename T>
+void snapshot_handler::message(const char * which, const T & exception) {
+	char * id = xc::XMLString::transcode(exception.getSystemId());
+	char * msg = xc::XMLString::transcode(exception.getMessage());
+	std::cerr << std::endl << which << " at file " << id << ", line " << exception.getLineNumber() << ", char " << exception.getColumnNumber() << "\n  Message: " << msg << std::endl;
+	xc::XMLString::release(&id);
+	xc::XMLString::release(&msg);
 }

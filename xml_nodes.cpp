@@ -64,6 +64,11 @@ void xml_nodes::shorten_xpath_with_id() {
 }
 
 std::ostream & operator<<(std::ostream & os, xml_nodes & xn) {
+	char *ch = xn.back()->get_characters();
 	os << xn.current_xpath(true);
+	if (ch) {
+		os << "=" << ch;
+	}
+	delete ch;
 	return os;
 }
