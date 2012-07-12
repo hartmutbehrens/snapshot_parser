@@ -25,7 +25,7 @@ public:
 	//methods
 	void push_back(xml_node *);
 	xml_node * back();
-	void pop_back();
+	void remove_last();
 	std::string current_xpath(bool with_id = false);
 	//overloaded operators
 	friend std::ostream & operator<<(std::ostream &, xml_nodes &);

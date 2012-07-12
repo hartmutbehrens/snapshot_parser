@@ -6,6 +6,7 @@ xml_nodes::xml_nodes() {}
 xml_nodes::~xml_nodes() {}
 //methods
 void xml_nodes::push_back(xml_node *xn) {
+	//update xpaths
 	char * tag = (*xn).get_tag();
 	char * id = (*xn).get_id();
 	xpath = xpath + "/" + tag;
@@ -15,6 +16,7 @@ void xml_nodes::push_back(xml_node *xn) {
 		delete id;
 	}
 	delete tag;
+	//add xml_node to list
 	nodes.push_back(xn);
 }
 
@@ -22,10 +24,12 @@ xml_node * xml_nodes::back() {
 	return nodes.back();
 }
 
-void xml_nodes::pop_back() {
+void xml_nodes::remove_last() {
 	shorten_xpath();
 	shorten_xpath_with_id();
-	nodes.pop_back();
+	xml_node *xn = nodes.back();			//get pointer to last xml_node
+	delete xn;
+	nodes.pop_back();						//remove pointer to last node
 }
 
 std::string xml_nodes::current_xpath(bool with_id) {
@@ -52,7 +56,7 @@ void xml_nodes::shorten_xpath_with_id() {
 	int id_len = 0;
 	char * id = (*xn).get_id();
 	if (id) {
-		id_len = std::strlen(id) + 8;						//also include the [@id= bits..)
+		id_len = std::strlen(id) + 8;						//also include the [@id='...'] bits
 		delete id;
 	}
 	delete tag;

@@ -1,7 +1,6 @@
 #include "snapshot_handler.h"
 #include <iterator>
 
-
 //constructor
 snapshot_handler::snapshot_handler() {
 	wanted["/snapshot/RNC/NodeB/FDDCell/attributes/cellId"] = 1;
@@ -21,19 +20,16 @@ void snapshot_handler::startElement(const XMLCh * const name, xc::AttributeList 
 
 void snapshot_handler::endElement(const XMLCh * const name) {
 	std::string xpath = nodes.current_xpath();
-	std::map<std::string,int>::iterator it;
-	it = wanted.find(xpath);			//see if xpath needs to be recorded
-	if (it != wanted.end() ) {
+	
+	if (wanted.find(xpath) != wanted.end() ) {
 		std::cout << nodes << std::endl;
 	}
-	xml_node *xn = nodes.back();		//get pointer to last xml_node
-	nodes.pop_back();					//pop pointer off
-	delete xn;							//free memory
+	nodes.remove_last();				//remove last xml_node added and reclaim memory
 }
 
 void snapshot_handler::characters(const XMLCh* const ch, const XMLSize_t length) {
 	if (length > 1) {
-		nodes.back()->add_characters(ch);
+		nodes.back()->add_characters(ch);	//update characters of last node
 	}
 }
 
