@@ -22,8 +22,11 @@ public:
 	bool is_tag(const char *);
 	bool is_id(const char *);
 	bool has_characters();
+	bool has_id();
+	void add_characters(const XMLCh *const);
 	char * get_characters();
 	char * get_tag();
+	char * get_id();
 	//overloaded operators
 	friend std::ostream & operator<<(std::ostream &, const xml_node &);
 	//destructor
