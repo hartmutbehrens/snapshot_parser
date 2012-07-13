@@ -12,7 +12,11 @@ void xml_nodes::push_back(xml_node *xn) {
 	xpath = xpath + "/" + tag;
 	xpath_with_id = xpath_with_id + "/" + tag;
 	if (id) {
+		if (outstring.length() > 0) {
+			outstring += "\t";
+		}
 		xpath_with_id = xpath_with_id + "[@id='" + id + "']";
+		outstring = outstring + tag + "=" + id;
 		delete id;
 	}
 	delete tag;
@@ -27,6 +31,7 @@ xml_node * xml_nodes::back() {
 void xml_nodes::remove_last() {
 	shorten_xpath();
 	shorten_xpath_with_id();
+	shorten_outstring();
 	xml_node *xn = nodes.back();			//get pointer to last xml_node
 	delete xn;
 	nodes.pop_back();						//remove pointer to last node
@@ -41,6 +46,27 @@ std::string xml_nodes::current_xpath(bool with_id) {
 	}
 }
 
+std::string xml_nodes::current_outstring() {
+	return outstring;
+}
+
+void xml_nodes::shorten_outstring() {
+	xml_node *xn = nodes.back();							//get pointer to last xml_node
+	char * id = (*xn).get_id();
+	if (id) {												//shortening only required when id is present
+		char * tag = (*xn).get_tag();
+		int len = std::strlen(tag) + 1;
+		int id_len = std::strlen(id);
+		if (nodes.size() > 1) {
+			id_len++;										//account for tab character;
+		}
+		outstring = outstring.substr(0,outstring.length() - (len + id_len));
+		delete id;
+		delete tag;
+	}
+	
+}
+
 void xml_nodes::shorten_xpath() {
 	xml_node *xn = nodes.back();							//get pointer to last xml_node
 	char * tag = (*xn).get_tag();
@@ -52,6 +78,7 @@ void xml_nodes::shorten_xpath() {
 void xml_nodes::shorten_xpath_with_id() {
 	xml_node *xn = nodes.back();							//get pointer to last xml_node
 	char * tag = (*xn).get_tag();
+
 	int len = std::strlen(tag) + 1;
 	int id_len = 0;
 	char * id = (*xn).get_id();
@@ -64,11 +91,13 @@ void xml_nodes::shorten_xpath_with_id() {
 }
 
 std::ostream & operator<<(std::ostream & os, xml_nodes & xn) {
+	char *tag = xn.back()->get_tag();
 	char *ch = xn.back()->get_characters();
-	os << xn.current_xpath(true);
+	os << xn.current_outstring() + "\t" + tag;
 	if (ch) {
 		os << "=" << ch;
+		delete ch;
 	}
-	delete ch;
+	delete tag;
 	return os;
 }
