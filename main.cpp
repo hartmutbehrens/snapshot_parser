@@ -1,18 +1,40 @@
+#include <boost/program_options.hpp>
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <iostream>
 #include <string>
 #include "snapshot_handler.h"
 
+//namespaces
 namespace xc = xercesc;
+namespace po = boost::program_options;
 //function prototypes
 template <typename T>
 int show_exception(const T &, const int); 
 //main - really ??
-int main(int argc, char* argv[]) {
-	if (argc < 2) {
-		std::cerr << "Provide at least one xpath argument!" <<std::endl;
-		exit(1);
+int main(int ac, char* av[]) {
+	try {
+		po::options_description desc("Allowed options");
+		desc.add_options()
+			("help","produce help message")
+			("xpath,x", po::value< std::vector<std::string> >(), "xpath('s) to search" )
+			("input-file", po::value< std::string >(), "xml input file")
+		;
+		po::positional_options_description p;
+		p.add("input_file",-1);
+
+		po::variables_map vm;
+		po::store(po::command_line_parser(ac,av).options(desc).positional(p).run(),vm);
+		po::notify(vm);
+
+		if ( (vm.count("help")) || (ac < 2) ) {
+			std::cout << desc << std::endl;
+			return 1;
+		}
+
+	}
+	catch(std::exception &e) {
+		std::cout << "Ding dong ding dong, something went wrong: "<< e.what() << std::endl;
 	}
 	
 	try {
@@ -27,7 +49,7 @@ int main(int argc, char* argv[]) {
 	xc::SAXParser* parser = new xc::SAXParser();
 	parser->setValidationScheme(xc::SAXParser::Val_Never);				//could also be Val_Auto or Val_Always
 
-	xc::DocumentHandler* doc_handler = new snapshot_handler(argc,argv);	//HandlerBase provides default empty implementation of all required methods
+	xc::DocumentHandler* doc_handler = new snapshot_handler(ac,av);	//HandlerBase provides default empty implementation of all required methods
 	xc::ErrorHandler* err_handler = (xc::ErrorHandler*) doc_handler;
 	parser->setDocumentHandler(doc_handler);
 	parser->setErrorHandler(err_handler);
@@ -38,7 +60,6 @@ int main(int argc, char* argv[]) {
 	}
 	catch (const xc::XMLException & to_catch) {
 		show_exception(to_catch,-1);
-		
 	}
 	catch (const xc::SAXParseException & to_catch) {
 		show_exception(to_catch,-1);
