@@ -6,6 +6,7 @@
 #include <list>
 #include <map>
 #include <string>
+#include <vector>
 #include "xml_nodes.h"
 
 namespace xc = xercesc;
@@ -21,7 +22,7 @@ private:
 	snapshot_handler & operator=(const snapshot_handler & ) { return *this; }	//pre-emptive definition, avoid object creation by assignment
 public:
 	//constructors
-	snapshot_handler(int, char* []);
+	snapshot_handler(std::vector<std::string> &);
 	//destructor
 	~snapshot_handler();
 	//handlers for the SAX DocumentHandler interface - override HandlerBase empty method

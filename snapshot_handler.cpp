@@ -2,9 +2,9 @@
 #include <iterator>
 
 //constructor
-snapshot_handler::snapshot_handler(int argc, char* argv[]) {
-	for (int i=1; i< argc; i++) {
-		wanted[argv[1]] = 1;
+snapshot_handler::snapshot_handler(std::vector<std::string> &xp) {
+	for(std::vector<std::string>::iterator it = xp.begin() ; it != xp.end(); it++) {
+		wanted[*it] = 1;
 	}
 }
 //destructor

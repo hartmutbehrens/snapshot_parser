@@ -17,6 +17,7 @@ int show_exception(const T &, const int);
 //main - really ??
 int main(int ac, char* av[]) {
 	std::string xml_file;
+	std::vector<std::string> xpath;
 	try {
 		po::options_description desc("Allowed options");
 		desc.add_options()
@@ -46,9 +47,8 @@ int main(int ac, char* av[]) {
 			std::cout << "Input file is required!" << std::endl;
 			return 1;
 		}
-
 		if (vm.count("xpath")) {
-			
+			xpath = vm["xpath"].as< std::vector<std::string> >();
 		}
 		else {
 			std::cout << "At least one xpath is required!" << std::endl;
@@ -71,7 +71,7 @@ int main(int ac, char* av[]) {
 	xc::SAXParser* parser = new xc::SAXParser();
 	parser->setValidationScheme(xc::SAXParser::Val_Never);				//could also be Val_Auto or Val_Always
 
-	xc::DocumentHandler* doc_handler = new snapshot_handler(ac,av);	//HandlerBase provides default empty implementation of all required methods
+	xc::DocumentHandler* doc_handler = new snapshot_handler(xpath);	//HandlerBase provides default empty implementation of all required methods
 	xc::ErrorHandler* err_handler = (xc::ErrorHandler*) doc_handler;
 	parser->setDocumentHandler(doc_handler);
 	parser->setErrorHandler(err_handler);

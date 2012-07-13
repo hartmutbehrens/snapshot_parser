@@ -16,7 +16,7 @@ void xml_nodes::push_back(xml_node *xn) {
 			outstring += "\t";
 		}
 		xpath_with_id = xpath_with_id + "[@id='" + id + "']";
-		//outstring = outstring + tag + "=" + id;
+		outstring = outstring + tag + "=" + id;
 		delete id;
 	}
 	delete tag;
@@ -31,7 +31,7 @@ xml_node * xml_nodes::back() {
 void xml_nodes::remove_last() {
 	shorten_xpath();
 	shorten_xpath_with_id();
-	//shorten_outstring();
+	shorten_outstring();
 	xml_node *xn = nodes.back();			//get pointer to last xml_node
 	delete xn;
 	nodes.pop_back();						//remove pointer to last node
