@@ -1,18 +1,22 @@
 #include <boost/program_options.hpp>
+#include <boost/filesystem.hpp>
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <iostream>
 #include <string>
+#include <vector>
 #include "snapshot_handler.h"
 
 //namespaces
 namespace xc = xercesc;
 namespace po = boost::program_options;
+namespace fs = boost::filesystem;
 //function prototypes
 template <typename T>
 int show_exception(const T &, const int); 
 //main - really ??
 int main(int ac, char* av[]) {
+	std::string xml_file;
 	try {
 		po::options_description desc("Allowed options");
 		desc.add_options()
@@ -21,7 +25,7 @@ int main(int ac, char* av[]) {
 			("input-file", po::value< std::string >(), "xml input file")
 		;
 		po::positional_options_description p;
-		p.add("input_file",-1);
+		p.add("input-file",-1);
 
 		po::variables_map vm;
 		po::store(po::command_line_parser(ac,av).options(desc).positional(p).run(),vm);
@@ -29,6 +33,25 @@ int main(int ac, char* av[]) {
 
 		if ( (vm.count("help")) || (ac < 2) ) {
 			std::cout << desc << std::endl;
+			return 1;
+		}
+		if (vm.count("input-file")) {
+			xml_file = vm["input-file"].as<std::string>();
+			if (! fs::exists(xml_file)) {
+				std::cout << "Input file \"" << xml_file << "\" does not exist!" <<std::endl;
+				return 1;
+			}
+		}
+		else {
+			std::cout << "Input file is required!" << std::endl;
+			return 1;
+		}
+
+		if (vm.count("xpath")) {
+			
+		}
+		else {
+			std::cout << "At least one xpath is required!" << std::endl;
 			return 1;
 		}
 
@@ -45,7 +68,6 @@ int main(int ac, char* av[]) {
 	}
 
 	//actual work with Xerces-C++
-	char * xml_file = "UTRAN-SNAP.xml";
 	xc::SAXParser* parser = new xc::SAXParser();
 	parser->setValidationScheme(xc::SAXParser::Val_Never);				//could also be Val_Auto or Val_Always
 
@@ -56,7 +78,7 @@ int main(int ac, char* av[]) {
 
 	try {
 		std::cout << "Parsing " << xml_file << std::endl;
-		parser->parse(xml_file);
+		parser->parse(xml_file.c_str());
 	}
 	catch (const xc::XMLException & to_catch) {
 		show_exception(to_catch,-1);
