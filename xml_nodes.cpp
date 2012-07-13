@@ -16,7 +16,7 @@ void xml_nodes::push_back(xml_node *xn) {
 			outstring += "\t";
 		}
 		xpath_with_id = xpath_with_id + "[@id='" + id + "']";
-		outstring = outstring + tag + "=" + id;
+		//outstring = outstring + tag + "=" + id;
 		delete id;
 	}
 	delete tag;
@@ -31,7 +31,7 @@ xml_node * xml_nodes::back() {
 void xml_nodes::remove_last() {
 	shorten_xpath();
 	shorten_xpath_with_id();
-	shorten_outstring();
+	//shorten_outstring();
 	xml_node *xn = nodes.back();			//get pointer to last xml_node
 	delete xn;
 	nodes.pop_back();						//remove pointer to last node
@@ -54,17 +54,16 @@ void xml_nodes::shorten_outstring() {
 	xml_node *xn = nodes.back();							//get pointer to last xml_node
 	char * id = (*xn).get_id();
 	if (id) {												//shortening only required when id is present
-		char * tag = (*xn).get_tag();
-		int len = std::strlen(tag) + 1;
-		int id_len = std::strlen(id);
-		if (nodes.size() > 1) {
-			id_len++;										//account for tab character;
+		size_t pos = outstring.find_last_of("\t");
+		if (pos != std::string.npos) {
+			outstring = outstring.substr(0,pos);
 		}
-		outstring = outstring.substr(0,outstring.length() - (len + id_len));
+		else {
+			outstring.clear();
+		}
+		
 		delete id;
-		delete tag;
 	}
-	
 }
 
 void xml_nodes::shorten_xpath() {
@@ -93,9 +92,9 @@ void xml_nodes::shorten_xpath_with_id() {
 std::ostream & operator<<(std::ostream & os, xml_nodes & xn) {
 	char *tag = xn.back()->get_tag();
 	char *ch = xn.back()->get_characters();
-	os << xn.current_outstring() + "\t" + tag;
+	os << xn.current_outstring();
 	if (ch) {
-		os << "=" << ch;
+		os << "\t" << tag << "=" << ch;
 		delete ch;
 	}
 	delete tag;

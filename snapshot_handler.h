@@ -21,7 +21,7 @@ private:
 	snapshot_handler & operator=(const snapshot_handler & ) { return *this; }	//pre-emptive definition, avoid object creation by assignment
 public:
 	//constructors
-	snapshot_handler();
+	snapshot_handler(int, char* []);
 	//destructor
 	~snapshot_handler();
 	//handlers for the SAX DocumentHandler interface - override HandlerBase empty method

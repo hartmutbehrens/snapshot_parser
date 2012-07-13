@@ -10,6 +10,11 @@ template <typename T>
 int show_exception(const T &, const int); 
 //main - really ??
 int main(int argc, char* argv[]) {
+	if (argc < 2) {
+		std::cerr << "Provide at least one xpath argument!" <<std::endl;
+		exit(1);
+	}
+	
 	try {
 		xc::XMLPlatformUtils::Initialize();
 	}
@@ -20,9 +25,9 @@ int main(int argc, char* argv[]) {
 	//actual work with Xerces-C++
 	char * xml_file = "UTRAN-SNAP.xml";
 	xc::SAXParser* parser = new xc::SAXParser();
-	parser->setValidationScheme(xc::SAXParser::Val_Never);		//could also be Val_Auto or Val_Always
+	parser->setValidationScheme(xc::SAXParser::Val_Never);				//could also be Val_Auto or Val_Always
 
-	xc::DocumentHandler* doc_handler = new snapshot_handler();	//HandlerBase provides default empty implementation of all required methods
+	xc::DocumentHandler* doc_handler = new snapshot_handler(argc,argv);	//HandlerBase provides default empty implementation of all required methods
 	xc::ErrorHandler* err_handler = (xc::ErrorHandler*) doc_handler;
 	parser->setDocumentHandler(doc_handler);
 	parser->setErrorHandler(err_handler);
@@ -50,6 +55,8 @@ int main(int argc, char* argv[]) {
 	xc::XMLPlatformUtils::Terminate();
 	return 0;
 }
+
+
 //function definitions
 template <typename T>
 int show_exception(const T & to_catch, const int rv) {

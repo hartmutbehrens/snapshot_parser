@@ -2,12 +2,10 @@
 #include <iterator>
 
 //constructor
-snapshot_handler::snapshot_handler() {
-	wanted["/snapshot/RNC/NodeB/FDDCell/attributes/cellId"] = 1;
-	wanted["/snapshot/RNC/NodeB/FDDCell/attributes/locationAreaCode"] = 1;
-	wanted["/snapshot/RNC/NodeB/FDDCell/attributes/primaryScramblingCode"] = 1;
-	wanted["/snapshot/RNC/NodeB/FDDCell/attributes/routingAreaCode"] = 1;
-	wanted["/snapshot/RNC/NodeB/FDDCell/attributes/serviceAreaCode"] = 1;
+snapshot_handler::snapshot_handler(int argc, char* argv[]) {
+	for (int i=1; i< argc; i++) {
+		wanted[argv[1]] = 1;
+	}
 }
 //destructor
 snapshot_handler::~snapshot_handler() {}
@@ -20,9 +18,9 @@ void snapshot_handler::startElement(const XMLCh * const name, xc::AttributeList 
 
 void snapshot_handler::endElement(const XMLCh * const name) {
 	std::string xpath = nodes.current_xpath();
-
-	if (wanted.find(xpath) != wanted.end() ) {
-		std::cout << nodes << std::endl;
+	std::string xpath_with_id = nodes.current_xpath(true);
+	if ( ( wanted.find(xpath) != wanted.end() ) || ( wanted.find(xpath_with_id) != wanted.end() ) ) {
+		std::cout << nodes << std::endl;	
 	}
 	nodes.remove_last();				//remove last xml_node added and reclaim memory
 }
