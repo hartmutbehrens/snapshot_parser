@@ -1,0 +1,6 @@
+lib program_options : : <name>libboost_program_options-vc90-mt-1_50 <search>C:/boost/boost_1_50_0/stage/lib ;
+lib xerces_sax : : <name>xerces-c_3D <search>C:/xerces-c-3.1.1/lib ;
+explicit program_options ;
+explicit xerces_sax ;
+project : requirements <include>C:/boost/boost_1_50_0 <include>C:/xerces-c-3.1.1/src <library>program_options <library>xerces_sax ;
+exe snapshot_parser : [ glob *.cpp ] ;
