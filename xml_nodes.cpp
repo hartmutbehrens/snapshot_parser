@@ -55,7 +55,7 @@ void xml_nodes::shorten_outstring() {
 	char * id = (*xn).get_id();
 	if (id) {												//shortening only required when id is present
 		size_t pos = outstring.find_last_of("\t");
-		if (pos != std::string.npos) {
+		if (pos != std::string::npos) {
 			outstring = outstring.substr(0,pos);
 		}
 		else {
