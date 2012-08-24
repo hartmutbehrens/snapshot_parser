@@ -12,8 +12,10 @@ snapshot_handler::~snapshot_handler() {}
 
 //handlers for the SAX DocumentHandler interface
 void snapshot_handler::startElement(const XMLCh * const name, xc::AttributeList &  attributes) {
-	xml_node *xn = new xml_node(name,attributes);
+	char *ctag = xc::XMLString::transcode(name);
+	xml_node *xn = new xml_node(ctag,attributes);
 	nodes.push_back(xn);
+	xc::XMLString::release(&ctag);
 }
 
 void snapshot_handler::endElement(const XMLCh * const name) {

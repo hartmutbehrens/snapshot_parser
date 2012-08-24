@@ -19,13 +19,13 @@ private:
 	xml_node & operator=(const xml_node &) { return *this; }	//pre-epmtive definition, avoid construction by assignment
 public:
 	//constructors
-	xml_node(const XMLCh * const, xc::AttributeList &);
-	xml_node(const XMLCh * const, std::map<std::string,std::string> &);
+	xml_node(char *, xc::AttributeList &);
+	xml_node(char *, std::map<std::string,std::string> &);
 	//member functions
 	void add_characters(const XMLCh *const);
 	std::string get_attribute(const char *);
-	std::string get_characters();
-	std::string get_tag();
+	std::string get_characters() const;
+	std::string get_tag() const;
 	//overloaded operators
 	friend std::ostream & operator<<(std::ostream &, xml_node &);
 	//destructor
