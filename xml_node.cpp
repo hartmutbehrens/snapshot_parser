@@ -16,7 +16,7 @@ std::string xml_node::get_attribute(const char * which) {
 	std::string value;
 	std::map<std::string, std::string>::iterator it = attributes.find(which);
 	if ( it != attributes.end() ) {
-		value = it->second.c_str();
+		value = it->second;
 	}
 	return value;
 }

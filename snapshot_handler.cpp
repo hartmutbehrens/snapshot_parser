@@ -17,10 +17,8 @@ void snapshot_handler::startElement(const XMLCh * const name, xc::AttributeList 
 	for (XMLSize_t i = 0; i < xc_attributes.getLength(); i++) {
 		char *name = xc::XMLString::transcode(xc_attributes.getName(i));
 		char *value = xc::XMLString::transcode(xc_attributes.getValue(i));
-		std::string n(name);
-		std::string v(value);
-
-		attributes[n] = v;
+		
+		attributes[name] = value;
 
 		xc::XMLString::release(&name);
 		xc::XMLString::release(&value);
