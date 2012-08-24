@@ -7,19 +7,17 @@ xml_nodes::~xml_nodes() {}
 //methods
 void xml_nodes::push_back(xml_node *xn) {
 	//update xpaths
-	char * tag = (*xn).get_tag();
-	char * id = (*xn).get_id();
+	std::string tag = xn->get_tag();
+	std::string id = xn->get_attribute("id");
 	xpath = xpath + "/" + tag;
 	xpath_with_id = xpath_with_id + "/" + tag;
-	if (id) {
+	if (!id.empty()) {
 		if (outstring.length() > 0) {
 			outstring += "\t";
 		}
 		xpath_with_id = xpath_with_id + "[@id='" + id + "']";
 		outstring = outstring + tag + "=" + id;
-		delete id;
 	}
-	delete tag;
 	//add xml_node to list
 	nodes.push_back(xn);
 }
@@ -52,8 +50,8 @@ std::string xml_nodes::current_outstring() {
 
 void xml_nodes::shorten_outstring() {
 	xml_node *xn = nodes.back();							//get pointer to last xml_node
-	char * id = (*xn).get_id();
-	if (id) {												//shortening only required when id is present
+	std::string id = xn->get_attribute("id");
+	if (!id.empty()) {												//shortening only required when id is present
 		size_t pos = outstring.find_last_of("\t");
 		if (pos != std::string::npos) {
 			outstring = outstring.substr(0,pos);
@@ -61,42 +59,36 @@ void xml_nodes::shorten_outstring() {
 		else {
 			outstring.clear();
 		}
-		
-		delete id;
 	}
 }
 
 void xml_nodes::shorten_xpath() {
 	xml_node *xn = nodes.back();							//get pointer to last xml_node
-	char * tag = (*xn).get_tag();
-	int len = std::strlen(tag) + 1;							//number of characters to remove from xpath +1 for the "/" character
-	delete tag;
+	std::string tag = xn->get_tag();
+	int len = tag.length() + 1;							//number of characters to remove from xpath +1 for the "/" character
 	xpath = xpath.substr(0,xpath.length() - len);	
 }
 
 void xml_nodes::shorten_xpath_with_id() {
 	xml_node *xn = nodes.back();							//get pointer to last xml_node
-	char * tag = (*xn).get_tag();
+	std::string tag = xn->get_tag();
 
-	int len = std::strlen(tag) + 1;
+	int len = tag.length() + 1;
 	int id_len = 0;
-	char * id = (*xn).get_id();
-	if (id) {
-		id_len = std::strlen(id) + 8;						//also include the [@id='...'] bits
-		delete id;
+	
+	std::string id = xn->get_attribute("id");
+	if (!id.empty()) {
+		id_len = id.length() + 8;						//also include the [@id='...'] bits
 	}
-	delete tag;
 	xpath_with_id = xpath_with_id.substr(0,xpath_with_id.length() - (len + id_len) );
 }
 
 std::ostream & operator<<(std::ostream & os, xml_nodes & xn) {
-	char *tag = xn.back()->get_tag();
-	char *ch = xn.back()->get_characters();
+	std::string tag = xn.back()->get_tag();
+	std::string ch = xn.back()->get_characters();
 	os << xn.current_outstring();
-	if (ch) {
+	if (!ch.empty()) {
 		os << "\t" << tag << "=" << ch;
-		delete ch;
 	}
-	delete tag;
 	return os;
 }

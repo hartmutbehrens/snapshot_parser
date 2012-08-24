@@ -1,92 +1,63 @@
 #include <iostream>
 #include "xml_node.h"
 
-xml_node::xml_node(const XMLCh *const name, xc::AttributeList & attributes) {
-	id = characters = NULL;							//initialize pointers that might not be populated with xml data
-	tag = xc::XMLString::transcode(name);
-	const XMLCh *ident = attributes.getValue("id");
-	if (ident) {
-		id = xc::XMLString::transcode(ident);
+xml_node::xml_node(const XMLCh *const name, xc::AttributeList & attrib) {
+	char *ctag = xc::XMLString::transcode(name);
+	tag.assign(ctag);
+	xc::XMLString::release(&ctag);
+
+	for (XMLSize_t i = 0; i < attrib.getLength(); i++) {
+		char *name = xc::XMLString::transcode(attrib.getName(i));
+		char *value = xc::XMLString::transcode(attrib.getValue(i));
+		std::string n(name);
+		std::string v(value);
+		attributes[n] = v;
+		xc::XMLString::release(&name);
+		xc::XMLString::release(&value);
 	}
+	//std::cout << "map:" <<std::endl;
+	//for(std::map<std::string,std::string>::iterator it = attributes.begin() ; it != attributes.end(); it++) {
+	//	std::cout << it->first << " : " << it->second << std::endl;
+	//}
 }
 
-bool xml_node::is_tag(const char * value) {
-	bool same = false;
-	if (strcmp(tag,value)== 0) {
-		same = true;
-	}
-	return same;
-}
-
-bool xml_node::is_id(const char * value) {
-	bool same = false;
-	if (strcmp(id,value)== 0) {
-		same = true;
-	}
-	return same;
-}
-
-bool xml_node::has_characters() {
-	bool has = false;
-	if (characters) {
-		has = true;
-	}
-	return has;
-}
-
-bool xml_node::has_id() {
-	bool has = false;
-	if (id) {
-		has = true;
-	}
-	return has;
+xml_node::xml_node(const XMLCh * const name, std::map<std::string,std::string> & attrib) : attributes(attrib) {
+	char *ctag = xc::XMLString::transcode(name);
+	tag.assign(ctag);
+	xc::XMLString::release(&ctag);
 }
 
 void xml_node::add_characters(const XMLCh *const ch) {
-	characters = xc::XMLString::transcode(ch);
+	char *cchar = xc::XMLString::transcode(ch);
+	characters.assign(cchar);
+	xc::XMLString::release(&cchar);
 }
 
-char * xml_node::get_characters() {
-	char *pstr = NULL;
-	if (characters) {
-		pstr = new char[std::strlen(characters)+1];
-		std::strcpy(pstr,characters);
+std::string xml_node::get_characters() {
+	return characters;
+}
+
+std::string xml_node::get_attribute(const char * which) {
+	std::string value;
+	std::map<std::string, std::string>::iterator it = attributes.find(which);
+	if ( it != attributes.end() ) {
+		value = it->second.c_str();
 	}
-	return pstr;
+	return value;
 }
 
-char * xml_node::get_id() {
-	char *pstr = NULL;
-	if (id) {
-		pstr = new char[std::strlen(id)+1];
-		std::strcpy(pstr,id);
-	}
-	return pstr;
+std::string xml_node::get_tag() {
+	return tag;
 }
 
-char * xml_node::get_tag() {
-	char *pstr = NULL;
-	if (tag) {
-		pstr = new char[std::strlen(tag)+1];
-		std::strcpy(pstr,tag);
-	}
-	return pstr;
-}
-
-std::ostream & operator<<(std::ostream & os, const xml_node & x) {
-	os << "/" << x.tag;
-	if (x.id) {
-		os << "[@id='" << x.id << "']";
+std::ostream & operator<<(std::ostream & os, xml_node & x) {
+	os << "/" << x.get_tag();
+	std::string id = x.get_attribute("id");
+	if (!id.empty()) {
+		os << "[@id='" << id << "']";
 	}
 	return os;
 }
 
 xml_node::~xml_node() {
-	xc::XMLString::release(&tag);
-	if (id) {
-		xc::XMLString::release(&id);
-	}
-	if (characters) {
-		xc::XMLString::release(&characters);
-	}
 }

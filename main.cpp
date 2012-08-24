@@ -80,7 +80,7 @@ int main(int ac, char* av[]) {
 				return 1;
 			}
 			std::cout << "Parsing " << *it << std::endl;
-			parser->parse(xml_file.c_str());
+			parser->parse((*it).c_str());
 		}
 	}
 	catch (const xc::XMLException & to_catch) {
