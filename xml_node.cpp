@@ -1,32 +1,11 @@
 #include <iostream>
 #include "xml_node.h"
 
-xml_node::xml_node(char *ctag, xc::AttributeList & attrib) : tag(ctag) {
-	//char *ctag = xc::XMLString::transcode(name);
-	//tag.assign(ctag);
-	//xc::XMLString::release(&ctag);
-
-	for (XMLSize_t i = 0; i < attrib.getLength(); i++) {
-		char *name = xc::XMLString::transcode(attrib.getName(i));
-		char *value = xc::XMLString::transcode(attrib.getValue(i));
-		std::string n(name);
-		std::string v(value);
-		attributes[n] = v;
-		xc::XMLString::release(&name);
-		xc::XMLString::release(&value);
-	}
-}
-
 xml_node::xml_node(char *ctag, std::map<std::string,std::string> & attrib) : attributes(attrib), tag(ctag) {
-	//char *ctag = xc::XMLString::transcode(name);
-	//tag.assign(ctag);
-	//xc::XMLString::release(&ctag);
 }
 
-void xml_node::add_characters(const XMLCh *const ch) {
-	char *cchar = xc::XMLString::transcode(ch);
+void xml_node::add_characters(char *cchar) {
 	characters.assign(cchar);
-	xc::XMLString::release(&cchar);
 }
 
 std::string xml_node::get_characters() const {

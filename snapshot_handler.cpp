@@ -11,7 +11,21 @@ snapshot_handler::snapshot_handler(std::vector<std::string> &xp) {
 snapshot_handler::~snapshot_handler() {}
 
 //handlers for the SAX DocumentHandler interface
-void snapshot_handler::startElement(const XMLCh * const name, xc::AttributeList &  attributes) {
+void snapshot_handler::startElement(const XMLCh * const name, xc::AttributeList &  xc_attributes) {
+	//create map of attributes
+	std::map<std::string,std::string> attributes;
+	for (XMLSize_t i = 0; i < xc_attributes.getLength(); i++) {
+		char *name = xc::XMLString::transcode(xc_attributes.getName(i));
+		char *value = xc::XMLString::transcode(xc_attributes.getValue(i));
+		std::string n(name);
+		std::string v(value);
+
+		attributes[n] = v;
+
+		xc::XMLString::release(&name);
+		xc::XMLString::release(&value);
+	}
+	//create new xml_node and push onto nodes list
 	char *ctag = xc::XMLString::transcode(name);
 	xml_node *xn = new xml_node(ctag,attributes);
 	nodes.push_back(xn);
@@ -29,7 +43,9 @@ void snapshot_handler::endElement(const XMLCh * const name) {
 
 void snapshot_handler::characters(const XMLCh* const ch, const XMLSize_t length) {
 	if (length > 1) {
-		nodes.back()->add_characters(ch);	//update characters of last node
+		char *cchar = xc::XMLString::transcode(ch);
+		nodes.back()->add_characters(cchar);	//update characters of last node
+		xc::XMLString::release(&cchar);
 	}
 }
 
@@ -46,6 +62,7 @@ void snapshot_handler::warning(const xc::SAXParseException& e) {
 	snapshot_handler::message("Warning", e);
 }
 
+//own methods
 template <typename T>
 void snapshot_handler::message(const char * which, const T & exception) {
 	char * id = xc::XMLString::transcode(exception.getSystemId());

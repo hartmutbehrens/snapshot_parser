@@ -1,12 +1,8 @@
 #ifndef XML_NODE_H
 #define XML_NODE_H
-#include <xercesc/sax/AttributeList.hpp>
-#include <xercesc/sax/HandlerBase.hpp>
 #include <iostream>
 #include <map>
 #include <string>
-
-namespace xc = xercesc;
 
 class xml_node {
 private:
@@ -19,10 +15,9 @@ private:
 	xml_node & operator=(const xml_node &) { return *this; }	//pre-epmtive definition, avoid construction by assignment
 public:
 	//constructors
-	xml_node(char *, xc::AttributeList &);
 	xml_node(char *, std::map<std::string,std::string> &);
 	//member functions
-	void add_characters(const XMLCh *const);
+	void add_characters(char *);
 	std::string get_attribute(const char *);
 	std::string get_characters() const;
 	std::string get_tag() const;
