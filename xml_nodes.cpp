@@ -26,13 +26,13 @@ xml_node * xml_nodes::back() {
 	return nodes.back();
 }
 
-void xml_nodes::remove_last() {
+xml_node * xml_nodes::remove_last() {
 	shorten_xpath();
 	shorten_xpath_with_id();
 	shorten_outstring();
 	xml_node *xn = nodes.back();			//get pointer to last xml_node
-	delete xn;
 	nodes.pop_back();						//remove pointer to last node
+	return xn;
 }
 
 std::string xml_nodes::current_xpath(bool with_id) {

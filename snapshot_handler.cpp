@@ -36,7 +36,8 @@ void snapshot_handler::endElement(const XMLCh * const name) {
 	if ( ( wanted.find(xpath) != wanted.end() ) || ( wanted.find(xpath_with_id) != wanted.end() ) ) {
 		std::cout << nodes << std::endl;	
 	}
-	nodes.remove_last();				//remove last xml_node added and reclaim memory
+	xml_node *xn = nodes.remove_last();				//get reference to last xml_node added
+	delete xn;										//reclaim memory
 }
 
 void snapshot_handler::characters(const XMLCh* const ch, const XMLSize_t length) {
