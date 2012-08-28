@@ -2,14 +2,15 @@
 #include "xml_node.h"
 
 xml_node::xml_node(char *ctag, std::map<std::string,std::string> & attrib) : attributes(attrib), tag(ctag) {
+	xp_fragment = xp_id_fragment = "/" + tag;
+	std::string *id = get_attribute("id");
+	if (id != NULL) {
+		xp_id_fragment += "[@id='" + *id + "']";
+	}
 }
 
 void xml_node::add_characters(char *cchar) {
 	characters.assign(cchar);
-}
-
-std::string xml_node::get_characters() const {
-	return characters;
 }
 
 std::string * xml_node::get_attribute(const char * which) {
@@ -20,16 +21,9 @@ std::string * xml_node::get_attribute(const char * which) {
 	return NULL;
 }
 
-std::string xml_node::get_tag() const {
-	return tag;
-}
 
 std::ostream & operator<<(std::ostream & os, xml_node & x) {
-	os << "/" << x.get_tag();
-	std::string *id = x.get_attribute("id");
-	if (id != NULL) {
-		os << "[@id='" << *id << "']";
-	}
+	os << x.xp_id_fragment;
 	return os;
 }
 

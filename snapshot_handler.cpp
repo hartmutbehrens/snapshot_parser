@@ -31,12 +31,11 @@ void snapshot_handler::startElement(const XMLCh * const name, xc::AttributeList 
 }
 
 void snapshot_handler::endElement(const XMLCh * const name) {
-	std::string *xpath = nodes.current_xpath();
-	std::string *xpath_with_id = nodes.current_xpath(true);
-	if ( ( wanted.find(*xpath) != wanted.end() ) || ( wanted.find(*xpath_with_id) != wanted.end() ) ) {
-		std::cout << "co: " << nodes << std::endl;	
-		std::cout << "xpwi: " << *xpath_with_id << std::endl;	
-		std::cout << "xp: " << *xpath << std::endl;	
+	//std::cout << "start:" << std::endl;
+	//nodes.lister();
+	if ( ( wanted.find(nodes.xpath) != wanted.end() ) || ( wanted.find(nodes.xpath_with_id) != wanted.end() ) ) {
+		std::cout << nodes << std::endl;	
+		std::cout << nodes.xpath_with_id << std::endl;	
 	}
 	xml_node *xn = nodes.remove_last();				//get reference to last xml_node added
 	delete xn;										//reclaim memory
