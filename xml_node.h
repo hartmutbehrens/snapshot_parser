@@ -18,7 +18,7 @@ public:
 	xml_node(char *, std::map<std::string,std::string> &);
 	//member functions
 	void add_characters(char *);
-	std::string get_attribute(const char *);
+	std::string * get_attribute(const char *);
 	std::string get_characters() const;
 	std::string get_tag() const;
 	//overloaded operators

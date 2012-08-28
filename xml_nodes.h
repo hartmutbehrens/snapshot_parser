@@ -15,9 +15,7 @@ private:
 	xml_nodes(const xml_nodes &) {}								//pre-emptive definition, avoid copy construction for now
 	xml_nodes & operator=(const xml_nodes &) { return *this; }	//pre-epmtive definition, avoid construction by assignment
 	//internal methods
-	void shorten_outstring();
-	void shorten_xpath();
-	void shorten_xpath_with_id();
+	void shorten_strings();
 
 public:
 	//constructors
@@ -28,8 +26,8 @@ public:
 	void push_back(xml_node *);
 	xml_node * back();
 	xml_node * remove_last();
-	std::string current_xpath(bool with_id = false);
-	std::string xml_nodes::current_outstring();
+	std::string * current_xpath(bool with_id = false);
+	std::string * current_outstring();
 	//overloaded operators
 	friend std::ostream & operator<<(std::ostream &, xml_nodes &);
 

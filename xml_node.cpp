@@ -12,13 +12,12 @@ std::string xml_node::get_characters() const {
 	return characters;
 }
 
-std::string xml_node::get_attribute(const char * which) {
-	std::string value;
+std::string * xml_node::get_attribute(const char * which) {
 	std::map<std::string, std::string>::iterator it = attributes.find(which);
 	if ( it != attributes.end() ) {
-		value = it->second;
+		return &it->second;
 	}
-	return value;
+	return NULL;
 }
 
 std::string xml_node::get_tag() const {
@@ -27,9 +26,9 @@ std::string xml_node::get_tag() const {
 
 std::ostream & operator<<(std::ostream & os, xml_node & x) {
 	os << "/" << x.get_tag();
-	std::string id = x.get_attribute("id");
-	if (!id.empty()) {
-		os << "[@id='" << id << "']";
+	std::string *id = x.get_attribute("id");
+	if (id != NULL) {
+		os << "[@id='" << *id << "']";
 	}
 	return os;
 }
