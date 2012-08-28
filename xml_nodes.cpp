@@ -1,5 +1,4 @@
 #include "xml_nodes.h"
-#include <iostream>
 
 //constructors
 xml_nodes::xml_nodes() {}
@@ -40,12 +39,10 @@ std::ostream & operator<<(std::ostream & os, xml_nodes & xn) {
 		if (id != NULL) {
 			os << (*it)->tag << "=" << *id << "\t";
 		}
-		if (it == xn.nodes.end()) {
-			if (! (*it)->characters.empty()) {
-				os << (*it)->tag << "=" << (*it)->characters;
-			}
-			
-		}
+	}
+	
+	if (!xn.back()->characters.empty()) {
+		os << xn.back()->tag << "=" << xn.back()->characters;
 	}
 	return os;
 }

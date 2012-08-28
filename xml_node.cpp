@@ -10,6 +10,7 @@ xml_node::xml_node(char *ctag, std::map<std::string,std::string> & attrib) : att
 }
 
 void xml_node::add_characters(char *cchar) {
+	std::cout << "adding: " << cchar << std::endl;
 	characters.assign(cchar);
 }
 
