@@ -22,7 +22,6 @@ public:
 	//member functions
 	void add_characters(char *);
 	std::string * get_attribute(const char *);
-	std::string to_string();
 	//overloaded operators
 	friend std::ostream & operator<<(std::ostream &, xml_node &);
 	//destructor

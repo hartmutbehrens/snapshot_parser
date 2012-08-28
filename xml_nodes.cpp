@@ -40,9 +40,9 @@ std::ostream & operator<<(std::ostream & os, xml_nodes & xn) {
 			os << (*it)->tag << "=" << *id << "\t";
 		}
 	}
-	
-	if (!xn.back()->characters.empty()) {
-		os << xn.back()->tag << "=" << xn.back()->characters;
+	xml_node *back = xn.back();
+	if (!back->characters.empty()) {
+		os << back->tag << "=" << back->characters;
 	}
 	return os;
 }
